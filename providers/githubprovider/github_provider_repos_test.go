@@ -40,7 +40,7 @@ func (mc *mockClient) POST(endpoint string, headers *http.Header, body interface
 
 func TestGetAuthorizationHeader(t *testing.T) {
 	expected := "token 000"
-	result := getAuthorizationHeader("000")
+	result := GetAuthorizationHeader("000")
 
 	assert.Equal(t, expected, result)
 }
@@ -158,6 +158,24 @@ func TestCreateRepo(t *testing.T) {
 				return &http.Response{
 					Body:       ioutil.NopCloser(strings.NewReader(`{sionTest"}`)),
 					StatusCode: http.StatusCreated,
+				}, nil
+			},
+			Request:      &github.CreateRepoRequest{},
+			UserName:     "testuser",
+			Token:        "testtoken",
+			ExpectedResp: nil,
+			ExpectedErr: &github.ErrorResponse{
+				StatusCode: http.StatusInternalServerError,
+				Message:    "Received invalid JSON response from provider: invalid character 's' looking for beginning of object key string",
+			},
+		},
+		{
+			// case when github returns error response with bad JSON
+			Number: 5,
+			PostFunction: func(endpoint string, headers *http.Header, body interface{}) (*http.Response, error) {
+				return &http.Response{
+					Body:       ioutil.NopCloser(strings.NewReader(`{sionTest"}`)),
+					StatusCode: http.StatusInternalServerError,
 				}, nil
 			},
 			Request:      &github.CreateRepoRequest{},
