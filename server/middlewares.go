@@ -1,9 +1,9 @@
 package server
 
 import (
-	"log"
-
 	"github.com/gin-gonic/gin"
+
+	"github.com/OJOMB/git-api-aggregator/log"
 )
 
 func (s *Server) middlewares() {
@@ -14,12 +14,12 @@ func (s *Server) middlewares() {
 
 func (s *Server) contentTypeMiddleware() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		if ctx.Request.URL.Path == "/" {
+		if ctx.Request.URL.Path == "/" || ctx.Request.URL.Path == "/marco" {
 			ctx.Header("Content-Type", "text/html; charset=utf-8")
-			log.Printf("Content-Type: %s", ctx.GetHeader("Content-Type"))
+			log.Info("Content-Type:" + ctx.GetHeader("Content-Type"))
 		} else if ctx.Request.URL.Path == "/" {
 		} else {
-			log.Print("set the content-type to json")
+			log.Info("set the content-type to json")
 			ctx.Header("Content-Type", "application/json")
 		}
 	}
@@ -27,6 +27,6 @@ func (s *Server) contentTypeMiddleware() gin.HandlerFunc {
 
 func (s *Server) logURLServedMiddleWare() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		log.Printf("%s served", ctx.Request.URL.Path)
+		log.Info(ctx.Request.URL.Path + "served")
 	}
 }

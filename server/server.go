@@ -3,7 +3,6 @@ package server
 import (
 	"fmt"
 	"log"
-	"os"
 
 	"github.com/gin-gonic/gin"
 
@@ -24,6 +23,7 @@ type Server struct {
 
 // New returns a new Server instance
 func New(router *gin.Engine, config *config.Config) (s *Server) {
+	gin.SetMode(gin.ReleaseMode)
 	s = &Server{
 		router: router,
 		repos:  reposcontroller.Repos,
@@ -44,22 +44,4 @@ func New(router *gin.Engine, config *config.Config) (s *Server) {
 func (s *Server) ListenAndServe() {
 	addr := fmt.Sprintf("%s:%d", s.config.IP, s.config.Port)
 	log.Fatal(s.router.Run(addr))
-}
-
-// StartApp takes some config and handles the initial startup process
-func StartApp(env string) {
-	// get the config
-	cnfg := config.ConfigMap[env]
-
-	// get the logger
-	logger := log.New(os.Stdout, "http: ", log.LstdFlags)
-	logger.Printf("Server is starting...")
-
-	// get the router
-	router := gin.Default()
-
-	// Instantiate server with shared dependencies
-	s := New(router, &cnfg)
-
-	s.ListenAndServe()
 }

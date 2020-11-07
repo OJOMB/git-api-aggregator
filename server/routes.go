@@ -8,18 +8,23 @@ func (s *Server) routes() {
 	s.router.StaticFile("/favicon.ico", "./public/favicon-32x32.png")
 	s.router.StaticFile("/", "./public/index.html")
 
-	///////////
+	////////////
 	// USERS //
-	///////////
+	//////////
 	s.router.GET("/users/:userName", s.users.GetUser)
 
 	///////////
+	// REPO //
+	/////////
+	s.router.POST("/users/:userName/repo", s.repos.CreateRepo)
+
+	////////////
 	// REPOS //
-	///////////
-	s.router.POST("/users/:userName/repos", s.repos.CreateRepo)
+	//////////
+	s.router.POST("/users/:userName/repos", s.repos.CreateRepos)
 
 	/////////////
 	// HEALTH //
 	///////////
-	s.router.GET("/polo", s.health.Polo)
+	s.router.GET("/marco", s.health.Polo)
 }

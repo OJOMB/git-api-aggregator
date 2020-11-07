@@ -1,24 +1,14 @@
-package config
+package main
 
 import (
-	"os"
+	"flag"
+
+	"github.com/OJOMB/git-api-aggregator/app"
 )
 
-const (
-	apiGithubAccessToken = "SECRET_GITHUB_ACCESS_TOKEN"
-)
+var env = flag.String("env", "dev", "The environment in which the server is running ['dev', 'test', 'production']")
 
-var (
-	githubAccessToken = os.Getenv(apiGithubAccessToken)
-)
-
-// Config holds the configuration settings for an instance of the app
-type Config struct {
-	Env  string
-	IP   string
-	Port int
-}
-
-func getGithubAccessToken() string {
-	return githubAccessToken
+func main() {
+	flag.Parse()
+	app.StartApp(*env)
 }

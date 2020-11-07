@@ -19,6 +19,7 @@ func init() {
 // ReposControllerInterface is the interface for the Repos controller
 type ReposControllerInterface interface {
 	CreateRepo(ctx *gin.Context)
+	CreateRepos(ctx *gin.Context)
 }
 
 type repos struct{}
@@ -37,5 +38,17 @@ func (r *repos) CreateRepo(ctx *gin.Context) {
 		return
 	}
 
+	ctx.JSON(http.StatusCreated, result)
+}
+
+// CreateRepo controller
+func (r *repos) CreateRepos(ctx *gin.Context) {
+	var request gitrepositories.CreateReposRequest
+	if err := ctx.ShouldBindJSON(&request); err != nil {
+		ctx.JSON(400, utils.NewBadRequestError("Received invalid request"))
+		return
+	}
+
+	result := services.Repos.CreateRepos(&request)
 	ctx.JSON(http.StatusCreated, result)
 }
